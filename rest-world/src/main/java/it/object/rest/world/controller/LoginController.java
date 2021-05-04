@@ -4,23 +4,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RestController;
+
+import it.object.rest.world.dto.User;
 
 @RestController
 public class LoginController {
 
-	@PostMapping("login")
-	public ResponseEntity<String> login(@RequestParam("username") String username,
-			@RequestParam("password") String password) {
-		ResponseEntity<String> resp = null;
-		if (username.equals("user") && password.equals("user")) {
-			resp = new ResponseEntity<>(HttpStatus.ACCEPTED);
+	@PostMapping("/login")
+	public ResponseEntity<User> login(@RequestBody User user) {
+		ResponseEntity<User> resp = null;
+		if (user.getUsername().isEmpty() && user.getPassword().isEmpty()) {
+			resp = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} else {
-			resp = new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
+			resp = new ResponseEntity<>(HttpStatus.ACCEPTED);
 		}
-
 		return resp;
 
 	}

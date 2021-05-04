@@ -5,9 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +19,9 @@ public class CityController {
 	@Autowired
 	private ICityDao daoCity;
 
-	@GetMapping("city/name")
-	public City getCityByName(@RequestParam("name") String name, HttpServletResponse response) {
+	@GetMapping("city/cityname")
+
+	public City getCityByName(@RequestParam("cityname") String name, HttpServletResponse response) {
 		City city = daoCity.getCityByName(name);
 		if (city == null) {
 			response.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -30,10 +30,10 @@ public class CityController {
 
 	}
 
-	@GetMapping("city/get-list-bycode")
-	public List<City> citiesList(@RequestParam("CountryCode") String code, HttpServletResponse response) {
-		List<City> cities = daoCity.getAllCitiesByCountryCode(code);
-		if (code.length() > 3) {
+	@GetMapping("city/country-code/{countryCode}")
+	public List<City> citiesList(@PathVariable String countryCode, HttpServletResponse response) {
+		List<City> cities = daoCity.getAllCitiesByCountryCode(countryCode);
+		if (countryCode.length() > 3) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
 		} else {

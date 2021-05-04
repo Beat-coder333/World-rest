@@ -3,6 +3,7 @@ package it.object.rest.world.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +15,11 @@ import org.springframework.stereotype.Component;
 import it.object.rest.world.dao.ICityDao;
 import it.object.rest.world.model.City;
 
-
-
 @Component
 public class CityDaoImpl implements ICityDao {
 
 	@Autowired
-	DataSource dataSource;
+	private DataSource dataSource;
 
 	@Override
 	public City getCityByName(String cityName) {
@@ -31,12 +30,9 @@ public class CityDaoImpl implements ICityDao {
 			stmt.setString(1, cityName);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				city = new City();
-				city.setId(rs.getInt("ID"));
-				city.setCountryCode(rs.getString("CountryCode"));
-				city.setName(rs.getString("Name"));
-				city.setPopulation(rs.getInt("Population"));
-				city.setDistrict(rs.getString("District"));
+
+				city = this.getFromResultSet(rs);
+
 			}
 
 			rs.close();
@@ -61,13 +57,7 @@ public class CityDaoImpl implements ICityDao {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 
-				City city = new City();
-				city.setId(rs.getInt("ID"));
-				city.setCountryCode(rs.getString("CountryCode"));
-				city.setName(rs.getString("Name"));
-				city.setPopulation(rs.getInt("Population"));
-				city.setDistrict(rs.getString("District"));
-				cities.add(city);
+				cities.add(getFromResultSet(rs));
 
 			}
 			rs.close();
@@ -78,6 +68,19 @@ public class CityDaoImpl implements ICityDao {
 			e.printStackTrace();
 		}
 		return cities;
+	}
+
+	private City getFromResultSet(ResultSet rs) throws SQLException {
+
+		City c = new City();
+		c.setId(rs.getInt("ID"));
+		c.setCountryCode(rs.getString("CountryCode"));
+		c.setName(rs.getString("Name"));
+		c.setPopulation(rs.getInt("Population"));
+		c.setDistrict(rs.getString("District"));
+
+		return c;
+
 	}
 
 }
